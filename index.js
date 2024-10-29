@@ -1,5 +1,7 @@
+// index.js
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const knex = require('./db/knex');
 const setsRoutes = require('./routes/sets');
 const usersRoutes = require('./routes/users');
@@ -10,18 +12,32 @@ const collectionsRoutes = require('./routes/collections');
 require('dotenv').config();
 const app = express();
 
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 app.use(bodyParser.json());
 
-// Routes
-app.use('/api/sets', setsRoutes);
-app.use('/api/users', usersRoutes);
-app.use('/api/collections', collectionsRoutes);
-app.use('/api', flashcardsRoutes);
-app.use('/api', commentsRoutes);
-
-app.get('/', async (req, res) => {
-  const sets = await knex('sets').select('*');
-  res.json(sets);
+// View Routes (if you are rendering views with EJS)
+app.get('/sets', async (req, res) => {
+  try {
+    const sets = await knex('sets').select('*');
+    res.render('index', { sets });
+  } catch (error) {
+    res.status(500).send('Error fetching sets');
+  }
 });
+
+// Root route to render the main page
+app.get('/', (req, res) => {
+  res.redirect('/sets');
+});
+
+// API Routes
+app.use('/api', setsRoutes);  // Handles /api/sets and sub-routes under sets
+app.use('/api', collectionsRoutes); // Handles /api/collections
+app.use('/api', usersRoutes);  // Handles /api/users
+app.use('/api', flashcardsRoutes); // Handles /api/flashcards with nested structure
+app.use('/api', commentsRoutes); // Handles /api/comments with nested structure
 
 module.exports = app;

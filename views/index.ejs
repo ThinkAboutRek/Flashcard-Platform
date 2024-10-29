@@ -1,3 +1,4 @@
+<!-- views/index.ejs -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +8,9 @@
   <h1>Flashcard Sets</h1>
   <ul>
     <% sets.forEach(set => { %>
-      <li><%= set.name %></li>
+      <li>
+        <a href="/sets/<%= set.id %>"><%= set.name %></a>
+      </li>
     <% }) %>
   </ul>
 </body>

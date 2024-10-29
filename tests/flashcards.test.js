@@ -1,38 +1,34 @@
+// tests/flashcards.test.js
 const request = require('supertest');
 const app = require('../index');
 const knex = require('../db/knex');
 
-let server;
-
-beforeAll(async () => {
-  server = app.listen(4001, () => {
-    console.log('Test server running on http://localhost:4001');
+describe('Flashcard Endpoints', () => {
+  beforeAll(async () => {
+    await knex.migrate.latest();
+    await knex.seed.run();
   });
-  await knex.migrate.latest();
-  await knex.seed.run();
-});
 
-afterAll(async () => {
-  await server.close();
-  await knex.destroy();
-});
+  afterAll(async () => {
+    await knex.destroy();
+  });
 
-describe('Flashcards Endpoints', () => {
   it('should fetch all flashcards in a set', async () => {
-    // Assuming we have a set with ID 1
-    const res = await request(server).get('/api/1/cards');
+    const setId = 1; // Ensure this ID matches one in your seeds or database
+    const res = await request(app).get(`/api/sets/${setId}/cards`);
     expect(res.statusCode).toEqual(200);
     expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body.length).toBeGreaterThan(0);
   });
 
   it('should create a new flashcard in a set', async () => {
-    // Assuming we have a set with ID 1
-    const res = await request(server)
-      .post('/api/1/cards')
+    const setId = 1; // Ensure this ID matches one in your seeds or database
+    const res = await request(app)
+      .post(`/api/sets/${setId}/cards`)
       .send({
         question: 'What is the capital of Spain?',
         answer: 'Madrid',
-        difficulty: 'easy'
+        difficulty: 'medium'
       });
     expect(res.statusCode).toEqual(201);
     expect(res.body.question).toBe('What is the capital of Spain?');

@@ -1,27 +1,21 @@
+// tests/comments.test.js
 const request = require('supertest');
 const app = require('../index');
 const knex = require('../db/knex');
 
-let server;
-
-beforeAll(async () => {
-  server = app.listen(4001, () => {
-    console.log('Test server running on http://localhost:4001');
+describe('Comment Endpoints', () => {
+  beforeAll(async () => {
+    await knex.migrate.latest();
+    await knex.seed.run();
   });
-  await knex.migrate.latest();
-  await knex.seed.run();
-});
 
-afterAll(async () => {
-  await server.close();
-  await knex.destroy();
-});
+  afterAll(async () => {
+    await knex.destroy();
+  });
 
-describe('Comments Endpoints', () => {
   it('should add a comment to a flashcard set', async () => {
-    // Assuming we have a set with ID 1 and a user with ID 1
-    const res = await request(server)
-      .post('/api/1/comment')
+    const res = await request(app)
+      .post('/api/sets/1/comment') // Replace "1" with a valid set ID from your database or seeds
       .send({
         comment: 'This set is really helpful!'
       })

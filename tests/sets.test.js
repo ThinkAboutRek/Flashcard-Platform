@@ -2,35 +2,34 @@ const request = require('supertest');
 const app = require('../index');
 const knex = require('../db/knex');
 
-let server;
-
-beforeAll(async () => {
-  server = app.listen(4000, () => {
-    console.log('Test server running on http://localhost:4000');
+describe('Flashcard Endpoints', () => {
+  beforeAll(async () => {
+    await knex.migrate.latest();
+    await knex.seed.run();
   });
-  await knex.migrate.latest(); 
-});
 
-afterAll(async () => {
-  await server.close(); 
-  await knex.destroy(); 
-});
+  afterAll(async () => {
+    await knex.destroy();
+  });
 
-describe('Flashcard Set Endpoints', () => {
-  it('should fetch all flashcard sets', async () => {
-    const res = await request(server).get('/api/sets');
+  it('should fetch all flashcards in a set', async () => {
+    const setId = 1; // Replace with a valid set ID from your seeds or database
+    const res = await request(app).get(`/api/sets/${setId}/cards`);
     expect(res.statusCode).toEqual(200);
     expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body.length).toBeGreaterThan(0);
   });
 
-  it('should create a new flashcard set', async () => {
-    const res = await request(server)
-      .post('/api/sets')
+  it('should create a new flashcard in a set', async () => {
+    const setId = 1; // Replace with a valid set ID from your seeds or database
+    const res = await request(app)
+      .post(`/api/sets/${setId}/cards`)
       .send({
-        name: 'Test Set',
-        cards: [{ question: 'What is the capital of France?', answer: 'Paris', difficulty: 'easy' }]
+        question: 'What is the capital of Spain?',
+        answer: 'Madrid',
+        difficulty: 'medium'
       });
     expect(res.statusCode).toEqual(201);
-    expect(res.body.name).toBe('Test Set');
+    expect(res.body.question).toBe('What is the capital of Spain?');
   });
 });

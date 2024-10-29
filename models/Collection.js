@@ -1,16 +1,29 @@
 // models/Collection.js
 const knex = require('../db/knex');
 
-const getAllCollections = async () => {
+// Get all collections
+const getAllCollections = () => {
   return knex('collections').select('*');
 };
 
-const getCollectionById = async (id) => {
+// Get a collection by ID
+const getCollectionById = (id) => {
   return knex('collections').where({ id }).first();
 };
 
-const createCollection = async (collection) => {
+// Create a new collection
+const createCollection = (collection) => {
   return knex('collections').insert(collection).returning('*');
 };
 
-module.exports = { getAllCollections, getCollectionById, createCollection };
+// Update an existing collection by ID
+const updateCollection = (id, collection) => {
+  return knex('collections').where({ id }).update(collection).returning('*');
+};
+
+// Delete a collection by ID
+const deleteCollection = (id) => {
+  return knex('collections').where({ id }).del();
+};
+
+module.exports = { getAllCollections, getCollectionById, createCollection, updateCollection, deleteCollection };

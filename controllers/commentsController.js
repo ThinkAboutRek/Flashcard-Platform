@@ -1,11 +1,12 @@
-const knex = require('../db/knex');
+// controllers/commentsController.js
+const { createComment } = require('../models/Comment');
 
 // Add a comment to a set
 const addCommentToSet = async (req, res) => {
   try {
     const { comment } = req.body;
     const { setId } = req.params;
-    const userId = req.user.id; // assuming authentication is handled
+    const userId = 1; // Assuming userId = 1 for testing purposes; replace with actual authentication later
 
     const newComment = {
       comment,
@@ -13,7 +14,7 @@ const addCommentToSet = async (req, res) => {
       user_id: userId,
     };
 
-    const [id] = await knex('comments').insert(newComment);
+    const [id] = await createComment(newComment);
     res.status(201).json({ id, ...newComment });
   } catch (error) {
     res.status(500).json({ message: 'Error adding comment', error });

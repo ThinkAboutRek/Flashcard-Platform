@@ -1,0 +1,20 @@
+<!-- views/flashcards.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flashcards</title>
+</head>
+<body>
+  <h1>Flashcards for Set: <%= set.name %></h1>
+  <ul>
+    <% flashcards.forEach(flashcard => { %>
+      <li>
+        <strong>Question:</strong> <%= flashcard.question %><br/>
+        <strong>Answer:</strong> <%= flashcard.answer %><br/>
+        <strong>Difficulty:</strong> <%= flashcard.difficulty %>
+      </li>
+    <% }) %>
+  </ul>
+  <a href="/">Back to Flashcard Sets</a>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!-- views/collections.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Collections</title>
+</head>
+<body>
+  <h1>User Collections</h1>
+  <ul>
+    <% collections.forEach(collection => { %>
+      <li>
+        <strong>User:</strong> <%= collection.user_id %> <br/>
+        <strong>Comment:</strong> <%= collection.comment %><br/>
+        <strong>Set:</strong> <%= collection.set_id %>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>
