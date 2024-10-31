@@ -34,10 +34,11 @@ app.get('/', (req, res) => {
 });
 
 // API Routes
-app.use('/api', setsRoutes);  // Handles /api/sets and sub-routes under sets
-app.use('/api', collectionsRoutes); // Handles /api/collections
-app.use('/api', usersRoutes);  // Handles /api/users
-app.use('/api', flashcardsRoutes); // Handles /api/flashcards with nested structure
-app.use('/api', commentsRoutes); // Handles /api/comments with nested structure
+app.use('/api', usersRoutes); 
+app.use('/api', collectionsRoutes);
+app.use('/api', setsRoutes);  
+app.use('/api', flashcardsRoutes); 
+app.use('/api', commentsRoutes);
+console.log("API routes have been registered successfully!");
 
 module.exports = app;

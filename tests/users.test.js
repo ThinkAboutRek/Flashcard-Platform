@@ -23,10 +23,11 @@ describe('User Endpoints', () => {
     const res = await request(app)
       .post('/api/users')
       .send({
-        username: 'john_doe',
+        username: 'unique_username_123', 
         admin: false
       });
     expect(res.statusCode).toEqual(201);
-    expect(res.body.username).toBe('john_doe');
+    expect(res.body.username).toBe('unique_username_123');
   });
+  
 });
