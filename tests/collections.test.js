@@ -17,7 +17,6 @@ describe('Collection Endpoints', () => {
     const res = await request(app).get('/api/collections');
     expect(res.statusCode).toEqual(200);
     expect(Array.isArray(res.body)).toBeTruthy();
-    console.log(res);
   });
 
   it('should create a new collection', async () => {

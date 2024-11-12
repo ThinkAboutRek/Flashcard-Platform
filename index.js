@@ -16,9 +16,10 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// View Routes (if you are rendering views with EJS)
+// View Routes (rendering EJS views for direct user access)
 app.get('/sets', async (req, res) => {
   try {
     const sets = await knex('sets').select('*');
@@ -28,17 +29,45 @@ app.get('/sets', async (req, res) => {
   }
 });
 
-// Root route to render the main page
+app.get('/users', async (req, res) => {
+  try {
+    const users = await knex('users').select('*');
+    res.render('users', { users });
+  } catch (error) {
+    res.status(500).send('Error fetching users');
+  }
+});
+
+app.get('/collections', async (req, res) => {
+  try {
+    const collections = await knex('collections').select('*');
+    res.render('collections', { collections });
+  } catch (error) {
+    res.status(500).send('Error fetching collections');
+  }
+});
+
+app.get('/flashcards', async (req, res) => {
+  try {
+    const flashcards = await knex('flashcards').select('*');
+    res.render('flashcards', { flashcards });
+  } catch (error) {
+    res.status(500).send('Error fetching flashcards');
+  }
+});
+
+// Root route
 app.get('/', (req, res) => {
   res.redirect('/sets');
 });
 
-// API Routes
-app.use('/api', usersRoutes); 
+// API Routes (mounted directly)
+app.use('/api', usersRoutes);
 app.use('/api', collectionsRoutes);
-app.use('/api', setsRoutes);  
-app.use('/api', flashcardsRoutes); 
+app.use('/api', setsRoutes);
+app.use('/api', flashcardsRoutes);
 app.use('/api', commentsRoutes);
-console.log("API routes have been registered successfully!");
+
+console.log("API and view routes have been registered successfully!");
 
 module.exports = app;

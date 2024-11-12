@@ -1,17 +1,46 @@
-<!-- views/index.ejs -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>Flashcards</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcard Platform - Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
 </head>
+
 <body>
-  <h1>Flashcard Sets</h1>
-  <ul>
-    <% sets.forEach(set => { %>
-      <li>
-        <a href="/sets/<%= set.id %>"><%= set.name %></a>
-      </li>
-    <% }) %>
-  </ul>
+  <header class="bg-primary text-white text-center py-4">
+    <h1>Flashcard Platform</h1>
+    <nav class="nav justify-content-center">
+      <a href="/collections" class="nav-link text-white">Collections</a>
+      <a href="/users" class="nav-link text-white">Users</a>
+      <a href="/flashcards" class="nav-link text-white">View Flashcards</a>
+    </nav>
+  </header>
+
+  <main class="container mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <section class="text-center">
+          <h2>Welcome to the Flashcard Platform</h2>
+          <p class="lead">Select a section to begin:</p>
+          <div class="list-group">
+            <a href="/collections" class="list-group-item list-group-item-action">View Collections</a>
+            <a href="/users" class="list-group-item list-group-item-action">View Users</a>
+            <a href="/flashcards" class="list-group-item list-group-item-action">View Flashcards</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-light text-center py-3 mt-5">
+    <p>&copy; 2024 Flashcard Platform</p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

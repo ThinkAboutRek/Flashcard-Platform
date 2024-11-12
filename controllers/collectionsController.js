@@ -6,7 +6,6 @@ const getCollections = async (req, res) => {
   try {
     console.log("Fetching all collections...");
     const collections = await getAllCollections();
-    console.log("Fetched collections:", collections);
     res.json(collections);
   } catch (error) {
     console.error("Error fetching collections:", error);

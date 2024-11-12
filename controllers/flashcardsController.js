@@ -7,7 +7,6 @@ const getFlashcardsInSet = async (req, res) => {
     const { setId } = req.params;
     console.log(`Fetching flashcards for set ID: ${setId}`);
     const flashcards = await getAllFlashcardsInSet(setId);
-    console.log('Found flashcards:', flashcards);
     if (!flashcards.length) return res.status(404).json({ message: 'No flashcards found' });
     res.json(flashcards);
   } catch (error) {

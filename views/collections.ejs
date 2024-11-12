@@ -1,19 +1,64 @@
 <!-- views/collections.ejs -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Collections</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
 </head>
+
 <body>
-  <h1>User Collections</h1>
-  <ul>
-    <% collections.forEach(collection => { %>
-      <li>
-        <strong>User:</strong> <%= collection.user_id %> <br/>
-        <strong>Comment:</strong> <%= collection.comment %><br/>
-        <strong>Set:</strong> <%= collection.set_id %>
-      </li>
-    <% }) %>
-  </ul>
+  <header class="bg-primary text-white text-center py-4">
+    <h1>Collections</h1>
+    <nav class="nav justify-content-center">
+      <a href="/" class="nav-link text-white">Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="container mt-5">
+    <section class="mb-5">
+      <h2>All Collections</h2>
+      <ul class="list-group">
+        <% collections.forEach(collection => { %>
+          <li class="list-group-item">
+            <strong>Comment:</strong> <%= collection.comment %><br>
+            <strong>User ID:</strong> <%= collection.user_id %><br>
+            <strong>Set ID:</strong> <%= collection.set_id %>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Add New Collection</h2>
+      <form method="POST" action="/api/collections" class="border p-4 rounded bg-light">
+        <div class="form-group">
+          <label for="userID">User ID:</label>
+          <input type="number" name="userID" id="userID" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="setID">Set ID:</label>
+          <input type="number" name="setID" id="setID" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="comment">Comment:</label>
+          <input type="text" name="comment" id="comment" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Collection</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="bg-light text-center py-3 mt-5">
+    <p>&copy; 2024 Flashcard Platform</p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
+
