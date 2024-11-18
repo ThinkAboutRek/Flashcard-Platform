@@ -5,7 +5,6 @@ const path = require('path');
 const knex = require('./db/knex');
 const setsRoutes = require('./routes/sets');
 const usersRoutes = require('./routes/users');
-const flashcardsRoutes = require('./routes/flashcards');
 const commentsRoutes = require('./routes/comments');
 const collectionsRoutes = require('./routes/collections');
 
@@ -57,14 +56,6 @@ app.get('/collections', async (req, res) => {
   }
 });
 
-app.get('/flashcards', async (req, res) => {
-  try {
-    const flashcards = await knex('flashcards').select('*');
-    res.render('flashcards', { flashcards });
-  } catch (error) {
-    res.status(500).send('Error fetching flashcards');
-  }
-});
 
 app.post('/api/sets/:setId/update', async (req, res) => {
   try {
@@ -112,7 +103,6 @@ app.get('/', (req, res) => {
 app.use('/api', usersRoutes);
 app.use('/api', collectionsRoutes);
 app.use('/api', setsRoutes);
-app.use('/api', flashcardsRoutes);
 app.use('/api', commentsRoutes);
 
 console.log("API and view routes have been registered successfully!");
