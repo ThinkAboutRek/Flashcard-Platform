@@ -9,6 +9,7 @@ const flashcardsRoutes = require('./routes/flashcards');
 const commentsRoutes = require('./routes/comments');
 const collectionsRoutes = require('./routes/collections');
 
+
 require('dotenv').config();
 const app = express();
 
@@ -22,12 +23,21 @@ app.use(bodyParser.json());
 // View Routes (rendering EJS views for direct user access)
 app.get('/sets', async (req, res) => {
   try {
-    const sets = await knex('sets').select('*');
+    const sets = await knex('sets').select('*').then(sets =>
+      sets.map(set => ({
+        ...set,
+        cards: set.cards ? JSON.parse(set.cards) : []
+      }))
+    );
     res.render('index', { sets });
   } catch (error) {
     res.status(500).send('Error fetching sets');
   }
 });
+
+
+
+
 
 app.get('/users', async (req, res) => {
   try {
@@ -53,6 +63,43 @@ app.get('/flashcards', async (req, res) => {
     res.render('flashcards', { flashcards });
   } catch (error) {
     res.status(500).send('Error fetching flashcards');
+  }
+});
+
+app.post('/api/sets/:setId/update', async (req, res) => {
+  try {
+    const { setId } = req.params;
+    const { name, questions, answers } = req.body;
+
+    if (!Array.isArray(questions) || !Array.isArray(answers)) {
+      throw new Error('Questions and Answers must be arrays');
+    }
+
+    const updatedCards = questions.map((question, index) => ({
+      question,
+      answer: answers[index],
+    }));
+
+    await knex('sets')
+      .where({ id: setId })
+      .update({ name, cards: JSON.stringify(updatedCards) });
+
+    console.log('Set updated successfully'); // Success message
+    res.redirect('/sets');
+  } catch (error) {
+    console.error('Error updating set:', error);
+    res.status(500).json({ message: 'Error updating set', error });
+  }
+});
+
+
+app.post('/api/sets/:setId/delete', async (req, res) => {
+  try {
+    const { setId } = req.params;
+    await knex('sets').where({ id: setId }).del();
+    res.redirect('/sets');
+  } catch (error) {
+    res.status(500).send('Error deleting set');
   }
 });
 

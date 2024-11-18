@@ -5,11 +5,15 @@ const { getAllSets, getSetById: findSetById, countSetsCreatedToday, createSet } 
 const getSets = async (req, res) => {
   try {
     const sets = await getAllSets();
-    res.json(sets);
+    console.log("Sets Data:", JSON.stringify(sets, null, 2)); // Debugging
+    res.render('sets', { sets });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching sets', error });
   }
 };
+
+
+
 
 // Get set by ID
 const getSetById = async (req, res) => {
@@ -23,26 +27,62 @@ const getSetById = async (req, res) => {
   }
 };
 
-// Create a new set
 const createSetController = async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
-    const createdToday = await countSetsCreatedToday(today);
+    const { name, questions, answers } = req.body;
 
-    if (createdToday[0].count >= 20) {
-      return res.status(429).json({ message: 'You have reached the maximum number of flashcard sets allowed today' });
+    // Ensure `questions` and `answers` are arrays and generate cards
+    const cards = questions.map((question, index) => ({
+      question,
+      answer: answers[index]
+    }));
+
+    const newSet = { name, cards: JSON.stringify(cards) }; // Stringify cards
+    await createSet(newSet);
+
+    res.redirect('/sets');
+  } catch (error) {
+    console.error('Error creating set:', error);
+    res.status(500).json({ message: 'Error creating set', error });
+  }
+};
+
+
+
+const updateSet = async (req, res) => {
+  try {
+    const { setId } = req.params;
+    const { name, questions, answers } = req.body;
+
+    if (!Array.isArray(questions) || !Array.isArray(answers)) {
+      throw new Error('Questions and Answers must be arrays');
     }
 
-    const { name, cards } = req.body;
-    const newSet = {
-      name,
-      cards: JSON.stringify(cards),
-    };
+    const updatedCards = questions.map((question, index) => ({
+      question,
+      answer: answers[index],
+    }));
 
-    const set = await createSet(newSet);
-    res.status(201).json(set);
+    await knex('sets')
+      .where({ id: setId })
+      .update({ name, cards: JSON.stringify(updatedCards) });
+
+    res.redirect('/sets');
   } catch (error) {
-    res.status(500).json({ message: 'Error creating set', error });
+    console.error('Error updating set:', error);
+    res.status(500).json({ message: 'Error updating set', error });
+  }
+};
+
+
+const deleteSet = async (req, res) => {
+  try {
+    const { setId } = req.params;
+    await deleteSetModel(setId);
+    res.redirect('/sets');
+  } catch (error) {
+    console.error('Error deleting set:', error);
+    res.status(500).json({ message: 'Error deleting set', error });
   }
 };
 
@@ -50,4 +90,6 @@ module.exports = {
   getSets,
   getSetById,
   createSetController,
+  updateSet,
+  deleteSet
 };

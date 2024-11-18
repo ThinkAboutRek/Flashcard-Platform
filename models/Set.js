@@ -1,19 +1,28 @@
 // models/Set.js
 const knex = require('../db/knex');
 
-// Get all sets
 const getAllSets = () => {
-  return knex('sets').select('*').then(sets => 
-    sets.map(set => ({ ...set, cards: JSON.parse(set.cards) }))
-  );
+  return knex('sets')
+    .select('*')
+    .then(sets =>
+      sets.map(set => ({
+        ...set,
+        cards: set.cards ? JSON.parse(set.cards) : [] // Properly parse cards into an array
+      }))
+    );
 };
 
-// Get a set by ID
+
+
+
 const getSetById = (id) => {
-  return knex('sets').where({ id }).first().then(set => {
-    if (set) set.cards = JSON.parse(set.cards);
-    return set;
-  });
+  return knex('sets')
+    .where({ id })
+    .first()
+    .then(set => {
+      if (set) set.cards = set.cards ? JSON.parse(set.cards) : [];
+      return set;
+    });
 };
 
 // Count the number of sets created today for enforcing the maximum requests per day
