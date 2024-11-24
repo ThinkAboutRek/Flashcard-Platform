@@ -1,10 +1,20 @@
-exports.seed = function (knex) {
-  return knex('sets')
-    .del()
-    .then(() => {
-      return knex('sets').insert([
-        { id: 1, name: 'European Capitals', cards: JSON.stringify([{ question: 'What is the capital of France?', answer: 'Paris', difficulty: 'easy' }]) },
-        { id: 2, name: 'Math Formulas', cards: JSON.stringify([{ question: 'What is the quadratic formula?', answer: 'ax^2 + bx + c = 0', difficulty: 'medium' }]) }
-      ]);
-    });
+exports.seed = async function (knex) {
+  await knex('sets').del(); // Clear existing data
+  await knex('sets').insert([
+    {
+      id: 1,
+      name: 'Set 1',
+      cards: JSON.stringify([
+        { question: 'What is JavaScript?', answer: 'A programming language.' },
+        { question: 'What is Node.js?', answer: 'A runtime environment.' },
+      ]),
+    },
+    {
+      id: 2,
+      name: 'Set 2',
+      cards: JSON.stringify([
+        { question: 'What is HTML?', answer: 'Markup language for web pages.' },
+      ]),
+    },
+  ]);
 };
