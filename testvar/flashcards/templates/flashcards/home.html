@@ -1,0 +1,13 @@
+{% extends "flashcards/base.html" %}
+
+{% block content %}
+<h1>Welcome to TestVar</h1>
+<h2>Flashcard Sets</h2>
+<ul>
+    {% for set in flashcardsets %}
+    <li>
+        <a href="/api/flashcardsets/{{ set.id }}/">{{ set.name }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
